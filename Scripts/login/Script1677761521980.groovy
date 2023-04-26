@@ -32,28 +32,83 @@ def appPath = PathUtil.relativeToAbsolutePath(GlobalVariable.AppPath, RunConfigu
 
 Mobile.startApplication(appPath, false)
 
-condition_appLaunch = Mobile.waitForElementPresent(findTestObject('Object Repository/Top Bar/title_home'), 10, , FailureHandling.OPTIONAL)
-
+//check app is launched
+condition_appLaunch = Mobile.waitForElementPresent(title_home, 10, FailureHandling.OPTIONAL)
 if(condition_appLaunch)
 	KeywordUtil.logInfo('App launched successfully.')
 else
 	KeywordUtil.markFailedAndStop('App is not launched.')
+	
 
-Mobile.tap(findTestObject('Object Repository/Top Bar/button_menu'), 10)
+//check menu button
+condition_menuButtonPresent = Mobile.waitForElementPresent(button_menu, 10, FailureHandling.OPTIONAL)
+if(condition_menuButtonPresent) {
+	KeywordUtil.logInfo('Menu button is present.')
+	Mobile.tap(button_menu, 10)
+}
+else
+	KeywordUtil.markFailedAndStop('Menu button is not present.')
+	
+//check login option
+condition_loginOptionPresent = Mobile.waitForElementPresent(option_login, 10, FailureHandling.OPTIONAL)
+if(condition_loginOptionPresent) {
+	KeywordUtil.logInfo('Login option is present.')
+	Mobile.tap(option_login, 10)
+}
+else
+	KeywordUtil.markFailedAndStop('Login option is missing from side menu.')
 
-Mobile.tap(findTestObject('Object Repository/Side Menu/option_login'), 10)
-
-Mobile.setText(findTestObject('Object Repository/Login/textField_username'), "bob@example.com", 10)
-
-Mobile.setText(findTestObject('Object Repository/Login/textField_password'), "10203040", 10)
-
-Mobile.tap(findTestObject('Object Repository/Login/button_login'), 10)
-
-
-def title = Mobile.getText(findTestObject('Object Repository/Login/title_products'), 10)
+//check username field
+condition_usernamePresent = Mobile.waitForElementPresent(textField_username, 10, FailureHandling.OPTIONAL)
+if(condition_usernamePresent) {
+	KeywordUtil.logInfo('Username field is present.')
+	Mobile.setText(textField_username, username, 10)
+}
+else
+	KeywordUtil.markFailedAndStop('Username field is missing.')
 
 
-Mobile.verifyEqual(title, 'Products')
+//check password field
+condition_passwordPresent = Mobile.waitForElementPresent(textField_password, 10, FailureHandling.OPTIONAL)
+if(condition_passwordPresent) {
+	KeywordUtil.logInfo('Password field is present.')
+	Mobile.setText(textField_password, password, 10)
+}
+else
+	KeywordUtil.markFailedAndStop('Password field is missing.')
+
+
+//check login button on login screen
+condition_loginButtonPresent = Mobile.waitForElementPresent(button_login, 10, FailureHandling.OPTIONAL)
+if(condition_loginButtonPresent) {
+	KeywordUtil.logInfo('Login button is present.')
+	Mobile.tap(button_login, 10)
+}
+else
+	KeywordUtil.markFailedAndStop('Login button is missing.')
+
+
+//check login success
+condition_titleAfterLogin = Mobile.waitForElementPresent(title_products, 10, FailureHandling.OPTIONAL)
+if(condition_titleAfterLogin) {
+	KeywordUtil.logInfo('Login is successfull.')
+}
+else
+	KeywordUtil.markFailedAndStop('Login is not working.')
+	
+
+//check title text after login
+def title = Mobile.getText(title_products, 10)
+condition_verifyTitleProducts = Mobile.verifyEqual(title, 'Products')
+if(condition_verifyTitleProducts) {
+	KeywordUtil.markPassed('Title after login is correct.')
+}
+else
+	KeywordUtil.markErrorAndStop('Title after login is incorrect.')
+
+
+
+
 
 Mobile.closeApplication()
 
